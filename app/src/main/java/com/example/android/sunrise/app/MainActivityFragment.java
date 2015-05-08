@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -21,7 +22,16 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ArrayList<String> list = new ArrayList<String>();
+        String[] forecastArray = {
+                "Today - Sunny - 88/63",
+                "Tomorrow - Foggy - 70/40",
+                "Weds - Cloudy - 72/63",
+                "Thurs- Asteroids - 75/65",
+                "Fri- Heavy Rain - 65/56",
+                "Sat - HELPED TRAPPED IN WEATHERSTATION - 60/51",
+                "Sun - Sunny - 80/68"
+        };
+        ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
         return rootView;
     }
 }
