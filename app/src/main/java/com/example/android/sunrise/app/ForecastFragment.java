@@ -1,9 +1,11 @@
 package com.example.android.sunrise.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -42,6 +44,12 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -62,19 +70,25 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            FetchWeatherTask task = new FetchWeatherTask();
-            task.execute("94043");
+            updateWeather();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateWeather() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        FetchWeatherTask task = new FetchWeatherTask();
+        task.execute(location);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        String[] forecastArray = {
+       /* String[] forecastArray = {
                 "Today - Sunny - 88/63",
                 "Tomorrow - Foggy - 70/40",
                 "Weds - Cloudy - 72/63",
@@ -83,7 +97,7 @@ public class ForecastFragment extends Fragment {
                 "Sat - HELP TRAPPED IN WEATHERSTATION - 60/51",
                 "Sun - Sunny - 80/68"
         };
-        ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
+        ArrayList<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));*/
         mForecastAdapter = new ArrayAdapter<String>(
                 //This fragment's parent Activity
                 getActivity(),
@@ -92,7 +106,7 @@ public class ForecastFragment extends Fragment {
                 //ID of textView to populate
                 R.id.list_item_forecast_textview,
                 //Fake data
-                weekForecast);
+                new ArrayList<String>());
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -228,7 +242,7 @@ public class ForecastFragment extends Fragment {
         private String getReadableDateString(long time){
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
-            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
+            SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE, MMM dd");
             return shortenedDateFormat.format(time);
         }
 
