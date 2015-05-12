@@ -55,7 +55,7 @@ public class DetailActivityFragment extends Fragment {
                 (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         // Attach an intent to this ShareActionProvider.  You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
+        // like when the user selects a new piece of com.example.android.sunrise.app.data they might like to share.
         if (mShareActionProvider != null ) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         } else {
