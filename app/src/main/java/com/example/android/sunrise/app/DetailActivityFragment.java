@@ -28,7 +28,7 @@ import com.example.android.sunrise.app.data.WeatherContract.WeatherEntry;
 public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
-    private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+    private static final String FORECAST_SHARE_HASHTAG = " #SunriseApp";
 
     private ShareActionProvider mShareActionProvider;
     private String mForecast;
@@ -91,8 +91,10 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
-        return inflater.inflate(R.layout.fragment_detail, container, false);
+        //return inflater.inflate(R.layout.fragment_detail, container, false);
+        return rootView;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -129,7 +131,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Log.v(LOG_TAG, "In onCreateLoader");
         Intent intent = getActivity().getIntent();
-        if (intent == null) {
+        if (intent == null || intent.getData() == null) {
             return null;
         }
 
@@ -151,7 +153,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
             // Read weather condition ID from cursor
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
             // Use placeholder Image
-            mIconView.setImageResource(R.drawable.ic_launcher);
+            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // Read date from cursor and update views for day of week and date
             long date = data.getLong(COL_WEATHER_DATE);
@@ -200,6 +202,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) { }
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
 }
 
